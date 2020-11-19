@@ -71,20 +71,29 @@ def tokenize(text):
 
     return clean_tokens
 
-# Function to develop the model
-def build_model():
+# Function to develop the pipeline
+def develop_pipeline():
     pipeline = Pipeline([
         ('features', FeatureUnion([
             ('text_pipeline', Pipeline([
                 ('lowercase', CaseNormalizer()),
-                ('vect', CountVectorizer(tokenizer=tokenize,ngram_range= (1, 2))),
+                ('vect', CountVectorizer(tokenizer=tokenize)),
                 ('tfidf', TfidfTransformer())
             ])),
             ('starting_verb', StartingVerbExtractor())
         ])),
-        ('clf', MultiOutputClassifier(RandomForestClassifier(n_estimators=200)))
+        ('clf', MultiOutputClassifier(RandomForestClassifier()))
     ])
     return pipeline
+
+# Function to develop the model
+def build_model():
+    parameters = {
+                    'features__text_pipeline__vect__ngram_range': ((1, 1), (1, 2)),
+                    'clf__estimator__n_estimators': [100, 200]
+                 }
+    cv = GridSearchCV(develop_pipeline(), param_grid=parameters)
+    return cv
 
 # Function to evaluate the model and store the results to a dataframe
 def evaluate_model(model, X_test, Y_test, category_names):
