@@ -4,14 +4,22 @@ This is a project to classify the tweets sent during disaster events in to vario
 
 The model output is done via flask webapp which outputs the plausible category of the incoming tweet. The incoming tweet undergoes a data cleaning process via an ETL pipeline and then in to the model developed on the data set provided by Figure Eight. The tweet is then categorized in to one of the 36 categories available such as 'aid related', 'search and rescue', 'child alone' etc.
 
+
 ### Requirements
 Software: Python 3
+
 Packages: 
+
 		Webapp: pandas, flask, plotly, nltk and sqlalchemy
-        ETL and ML Pipelines: pandas, numpy and sklearn
+        
+		ETL and ML Pipelines: pandas, numpy, joblib and sklearn
+
 Datasets:
+		
 		disaster_messages.csv: List of tweets related to disaster events
-        disaster_categories.csv: Categorization of the tweets in disaster_messages.csv. A single tweet can be categorized in to multiple categories.
+        
+		disaster_categories.csv: Categorization of the tweets in disaster_messages.csv. A single tweet can be categorized in to multiple categories.
+
 
 ### Instructions:
 1. Run the following commands in the project's root directory to set up your database and model.
