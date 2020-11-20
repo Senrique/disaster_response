@@ -59,7 +59,7 @@ def save_data(df, database_filename):
     """
     Save the processed dataframe into SQLite database
     
-    Args:
+    Arguments:
         df(Dataframe): Processed dataframe
         database_filename(string): the file path to save the .db file
     """

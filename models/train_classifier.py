@@ -75,7 +75,7 @@ def tokenize(text):
     """
     Returns the word tokens after reducing words to their root form
     
-    Args:
+    Arguments:
         text(string): input message text
     Returns:
         clean_tokens (list): list of reduced words to their root form
@@ -92,6 +92,14 @@ def tokenize(text):
 
 # Function to develop the pipeline
 def develop_pipeline():
+	"""
+	Returns the pipeline object that has list of text processing and model development steps
+	
+	Arguments:
+		None
+	Returns:
+		pipeline: pipeline object
+	"""
     pipeline = Pipeline([
         ('features', FeatureUnion([
             ('text_pipeline', Pipeline([
@@ -110,7 +118,7 @@ def build_model():
     """
     Returns the grid search model based on the parameter space defined in the function
     
-    Args:
+    Arguments:
         None
     Returns:
         cv: Grid search model
@@ -127,7 +135,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
     """
     Returns multi-output classification results dataframe
     
-    Args:
+    Arguments:
         model (dataframe): the scikit-learn fitted model
         X_text (dataframe): Feature test dataframe
         y_test (dataframe): Target test dataframe
@@ -152,7 +160,7 @@ def save_model(model, model_filepath):
     """
     Saves the developed model to given path 
     
-    Args: 
+    Arguments: 
         model (estimator): The fitted model
         model_filepath (str): Filepath to save the model
     Return:
