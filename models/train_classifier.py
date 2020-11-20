@@ -22,6 +22,17 @@ import joblib
 
 # Function to load data
 def load_data(database_filepath):
+    """
+    Load the data
+    
+    Arguments:
+      database_filepath(string): the file path of input database
+      
+    Return:
+      X (pandas dataframe): Features dataframe
+	  y (pandas dataframe): Targets dataframe
+      category_names (list): List of target names
+    """
     engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql_table('disaster_response', engine)
     X = df['message']
@@ -61,6 +72,14 @@ class CaseNormalizer(BaseEstimator, TransformerMixin):
 
 # Function to create clean tokens through text processing
 def tokenize(text):
+    """
+    Returns the word tokens after reducing words to their root form
+    
+    Args:
+        text(string): input message text
+    Returns:
+        clean_tokens (list): list of reduced words to their root form
+    """
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -88,6 +107,14 @@ def develop_pipeline():
 
 # Function to develop the model
 def build_model():
+    """
+    Returns the grid search model based on the parameter space defined in the function
+    
+    Args:
+        None
+    Returns:
+        cv: Grid search model
+    """
     parameters = {
                     'features__text_pipeline__vect__ngram_range': ((1, 1), (1, 2)),
                     'clf__estimator__n_estimators': [100, 200]
@@ -97,6 +124,17 @@ def build_model():
 
 # Function to evaluate the model and store the results to a dataframe
 def evaluate_model(model, X_test, Y_test, category_names):
+    """
+    Returns multi-output classification results dataframe
+    
+    Args:
+        model (dataframe): the scikit-learn fitted model
+        X_text (dataframe): Feature test dataframe
+        y_test (dataframe): Target test dataframe
+        category_names (list): Category names
+    Returns:
+        results (dataframe): Model results containing precision, recall and f-score per output
+    """
     y_pred = model.predict(X_test)
     count = 0
     results = pd.DataFrame(columns=['category', 'precision', 'recall', 'f_score'])
@@ -111,6 +149,15 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 # Function to output the model for further use
 def save_model(model, model_filepath):
+    """
+    Saves the developed model to given path 
+    
+    Args: 
+        model (estimator): The fitted model
+        model_filepath (str): Filepath to save the model
+    Return:
+        None
+	"""
     joblib.dump(model, model_filepath)
 
 
