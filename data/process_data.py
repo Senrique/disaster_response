@@ -5,30 +5,64 @@ import os
 
 
 def load_data(messages_filepath, categories_filepath):
-    messages = pd.read_csv(messages_filepath)
+    """
+    Load the data
+    
+    Arguments:
+      messages_filepath(string): the file path of messages.csv
+      categories_filepath(string): the file path of categories.csv
+      
+    Return:
+      df: merged dataframe of messages + categories
+    """
+	messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     df = messages.merge(categories,on="id",how='left')
     return df
 
 
 def clean_data(df):
-    categories = df['categories'].str.split(pat=";",expand=True)
-    row = categories.iloc[0]
+    """
+    Process the data:
+	1. Split the categories column in to separate categories columns
+	2. Rename those columns with appropriate category names
+	3. Convert the categorical values to integer values
+	4. Remove duplicates (if any)
+    
+    Arguments:
+      df(dataframe): merged dataframe from load_data function
+      
+    Return:
+      df: processed dataframe
+    """
+    # Split the categories column in to separate categories columns
+	categories = df['categories'].str.split(pat=";",expand=True)
+    # Obtain the category names
+	row = categories.iloc[0]
     category_colnames = [x.split("-")[0] for x in row]
-    categories.columns = category_colnames
+    # Rename category columns
+	categories.columns = category_colnames
     for column in categories:
         # set each value to be the last character of the string
         categories[column] = [x.split("-")[1] for x in categories[column]]
     
         # convert column from string to numeric
-        categories[column] = categories[column].astype('Int64')
-    df = df.drop(["categories"],axis=1)
+        categories[column] = categories[column].astype('float').astype('Int64')
+    # Drop duplicates
+	df = df.drop(["categories"],axis=1)
     df = pd.concat([df, categories], axis=1, sort=False)
     df = df.drop_duplicates()
     return df
 
 
 def save_data(df, database_filename):
+    """
+    Save the processed dataframe into SQLite database
+    
+    Args:
+        df(Dataframe): Processed dataframe
+        database_filename(string): the file path to save the .db file
+    """
     engine = create_engine('sqlite:///'+database_filename)
     df.to_sql('disaster_response', engine, index=False)  
 
